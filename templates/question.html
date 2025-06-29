@@ -20,9 +20,9 @@
         <div class="options-grid">
             {% for option in options %}
                 {% if option[1] and option[1] != 'None' %}
-                    <a onclick="showNextQuestion('q{{ option[1] }}')">{{ option[0] }}</a>
+                    <a onclick="showNextQuestion('q{{ option[1] }}', '{{ option[0] }}')">{{ option[0] }}</a>
                 {% else %}
-                    <a onclick="showNextQuestion('qend')">{{ option[0] }}</a>
+                    <a onclick="showNextQuestion('qend', '{{ option[0] }}')">{{ option[0] }}</a>
                 {% endif %}
             {% endfor %}
         </div>
@@ -37,40 +37,83 @@
         <div class="options-grid">
             {% for opt in q.options %}
                 {% if opt.next_id and opt.next_id != 'None' %}
-                    <a onclick="showNextQuestion('q{{ opt.next_id }}')">{{ opt.text }}</a>
+                    <a onclick="showNextQuestion('q{{ opt.next_id }}', '{{ opt.text }}')">{{ opt.text }}</a>
                 {% else %}
-                    <a onclick="showNextQuestion('qend')">{{ opt.text }}</a>
+                    <a onclick="showNextQuestion('qend', '{{ opt.text }}')">{{ opt.text }}</a>
                 {% endif %}
             {% endfor %}
         </div>
     </div>
     {% endfor %}
-
-    <!-- 終了メッセージ -->
-    <div class="question-box" id="qend">
-        <div class="end-message">ご回答ありがとうございました！</div>
-    </div>
-
 </div>
 
 <!-- フッター入力欄 -->
 <div class="chat-footer">
-    <input type="text" placeholder="質問を入力..." class="chat-input">
+    <input type="text" placeholder="質問を入力してください" class="chat-input">
     <button class="chat-send-btn">
         <img src="{{ url_for('static', filename='send-icon-blue.png') }}" alt="送信" class="send-icon">
     </button>
 </div>
 
+<!-- JavaScript -->
 <script>
-    function showNextQuestion(nextId) {
-        if (!nextId || nextId === 'qNone' || nextId === 'None') {
-            nextId = 'qend';
-        }
-        const nextBox = document.getElementById(nextId);
-        if (nextBox) {
-            nextBox.classList.add('show');
-            nextBox.scrollIntoView({ behavior: 'smooth' });
-        }
+function showNextQuestion(nextId, selectedText) {
+    if (!nextId || nextId === 'qNone' || nextId === 'None') {
+        nextId = 'qend';
     }
+
+    const chatContainer = document.getElementById("chat-container");
+
+    if (nextId !== 'qend') {
+        const nextBox = document.getElementById(nextId);
+        if (!nextBox.classList.contains("show")) {
+            const commentDiv = document.createElement("div");
+            commentDiv.className = "chat-message chat-bot";
+            commentDiv.style.marginTop = "0.5rem";
+            commentDiv.style.marginBottom = "0.5rem";
+            commentDiv.innerHTML = `
+                <div class="chat-header">
+                    <img src="{{ url_for('static', filename='takeoka-icon.png') }}" alt="ロゴ" class="chat-logo">
+                    <p>「${selectedText}」ですね。以下からお選びください。</p>
+                </div>
+            `;
+            nextBox.parentNode.insertBefore(commentDiv, nextBox);
+            nextBox.classList.add("show");
+        }
+        nextBox.scrollIntoView({ behavior: 'smooth' });
+    } else {
+        // 「最初に戻る」コメントを追加
+        const restartDiv = document.createElement("div");
+        restartDiv.className = "chat-message chat-bot";
+        restartDiv.style.marginTop = "0.5rem";
+        restartDiv.style.marginBottom = "0.5rem";
+        restartDiv.innerHTML = `
+            <div class="chat-header">
+                <img src="{{ url_for('static', filename='takeoka-icon.png') }}" alt="ロゴ" class="chat-logo">
+                <p>最初からやり直す場合は <a href="#" onclick="restartChat()" style="text-decoration: underline; color: #007BFF;">こちら</a></p>
+            </div>
+        `;
+        chatContainer.appendChild(restartDiv);
+        restartDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function restartChat() {
+    const chatContainer = document.getElementById("chat-container");
+
+    const boxes = chatContainer.querySelectorAll(".question-box, .chat-message.chat-bot");
+    boxes.forEach(box => {
+        box.classList.remove("show");
+        if (box.classList.contains("chat-message")) {
+            box.remove();  // コメントは削除
+        }
+    });
+
+    const first = document.querySelector(".question-box");
+    if (first) {
+        first.classList.add("show");
+        first.scrollIntoView({ behavior: 'smooth' });
+    }
+}
 </script>
 {% endblock %}

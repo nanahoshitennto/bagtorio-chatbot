@@ -1,12 +1,16 @@
-/* 全体設定 */
+/* =========================
+   全体設定
+========================= */
 body {
     margin: 0;
     font-family: "Helvetica Neue", sans-serif;
     background-color: #f7f9fb;
-    padding-bottom: 80px; /* フッターの高さ確保 */
+    padding-bottom: 80px;
 }
 
-/* ヘッダー */
+/* =========================
+   ヘッダー（固定）
+========================= */
 .header {
     background-color: #007bff;
     padding: 12px 24px;
@@ -15,6 +19,9 @@ body {
     justify-content: space-between;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header-inner {
@@ -41,7 +48,9 @@ body {
     right: 20px;
 }
 
-/* リセットボタン */
+/* =========================
+   リセットボタン
+========================= */
 .reset-btn img,
 .reset-icon,
 .reset-img {
@@ -60,12 +69,16 @@ body {
     background-color: rgba(255,255,255,0.4);
 }
 
-/* メインコンテンツ */
+/* =========================
+   メイン
+========================= */
 .main-content {
     padding: 24px;
 }
 
-/* チャットボックス */
+/* =========================
+   チャットボックス
+========================= */
 .chat-box {
     background: white;
     padding: 2rem;
@@ -75,7 +88,13 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* チャットヘッダー（ロゴ＋説明） */
+.chat-box > *:not(:last-child) {
+    margin-bottom: 0.75rem;
+}
+
+/* =========================
+   チャットヘッダー
+========================= */
 .chat-header {
     background-color: #f2f2f2;
     padding: 20px;
@@ -83,7 +102,10 @@ body {
     gap: 15px;
     border-radius: 10px;
     align-items: center;
-    margin-bottom: 1.5rem;
+}
+
+.chat-header:not(:last-child) {
+    margin-bottom: 0.5rem;
 }
 
 .chat-logo {
@@ -98,7 +120,13 @@ body {
     color: #444;
 }
 
-/* チャット内容（質問表示） */
+/* =========================
+   質問とメッセージ
+========================= */
+.chat-message {
+    margin: 0;
+}
+
 .chat-message .question-text {
     background: #dbeafe;
     padding: 0.5rem 1rem;
@@ -106,9 +134,10 @@ body {
     font-weight: bold;
 }
 
-/* 質問ボックス */
+/* =========================
+   質問表示エリア
+========================= */
 .question-box {
-    margin-bottom: 20px;
     padding: 15px;
     background: #fff;
     border-radius: 10px;
@@ -117,20 +146,25 @@ body {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s ease, opacity 0.5s ease;
+    margin: 0;
 }
 
 .question-box.show {
     max-height: 1000px;
     opacity: 1;
+    margin-top: 0.5rem;
 }
 
-/* 選択肢 */
+/* =========================
+   選択肢ボタン
+========================= */
 .options-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
 }
 
 .options-grid a {
@@ -152,7 +186,9 @@ body {
     background: #0056b3;
 }
 
-/* 終了メッセージ */
+/* =========================
+   終了メッセージ
+========================= */
 .end-message {
     text-align: center;
     font-size: 1.5rem;
@@ -160,7 +196,9 @@ body {
     padding: 2rem;
 }
 
-/* フッター入力欄 */
+/* =========================
+   フッター
+========================= */
 .chat-footer {
     position: fixed;
     bottom: 0;
@@ -197,7 +235,9 @@ body {
     filter: invert(1);
 }
 
-/* レスポンシブ */
+/* =========================
+   レスポンシブ対応
+========================= */
 @media (max-width: 768px) {
     .options-grid a {
         width: calc(50% - 1rem);
