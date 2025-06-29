@@ -1,37 +1,30 @@
-/* =======================
-   全体設定
-======================= */
+/* 全体設定 */
 body {
     margin: 0;
     font-family: "Helvetica Neue", sans-serif;
     background-color: #f7f9fb;
-    padding: 2rem;
+    padding-bottom: 80px; /* フッターの高さ確保 */
 }
 
-/* =======================
-   ヘッダー構成
-======================= */
+/* ヘッダー */
 .header {
-    background-color: #007bff; /* 青背景 */
+    background-color: #007bff;
     padding: 12px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    position: relative;
     color: white;
 }
 
 .header-inner {
     display: flex;
     align-items: center;
-    margin: auto;
-    flex-grow: 1;
     justify-content: center;
     gap: 12px;
+    flex-grow: 1;
 }
 
-/* ロゴ（未使用） */
 .logo {
     height: 40px;
     margin-right: 12px;
@@ -48,9 +41,7 @@ body {
     right: 20px;
 }
 
-/* =======================
-   リセットボタン
-======================= */
+/* リセットボタン */
 .reset-btn img,
 .reset-icon,
 .reset-img {
@@ -69,16 +60,12 @@ body {
     background-color: rgba(255,255,255,0.4);
 }
 
-/* =======================
-   メインコンテンツ
-======================= */
+/* メインコンテンツ */
 .main-content {
     padding: 24px;
 }
 
-/* =======================
-   チャットUI
-======================= */
+/* チャットボックス */
 .chat-box {
     background: white;
     padding: 2rem;
@@ -88,28 +75,56 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* チャットヘッダー（ロゴ＋説明） */
 .chat-header {
+    background-color: #f2f2f2;
+    padding: 20px;
     display: flex;
+    gap: 15px;
+    border-radius: 10px;
     align-items: center;
     margin-bottom: 1.5rem;
 }
 
-.chat-header img {
-    width: 40px;
-    height: 40px;
-    margin-right: 1rem;
+.chat-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
-.chat-header .question-text {
+.chat-header p {
+    margin: 0;
+    font-size: 16px;
+    color: #444;
+}
+
+/* チャット内容（質問表示） */
+.chat-message .question-text {
     background: #dbeafe;
     padding: 0.5rem 1rem;
     border-radius: 10px;
     font-weight: bold;
 }
 
-/* =======================
-   選択肢ボタン
-======================= */
+/* 質問ボックス */
+.question-box {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.question-box.show {
+    max-height: 1000px;
+    opacity: 1;
+}
+
+/* 選択肢 */
 .options-grid {
     display: flex;
     flex-wrap: wrap;
@@ -137,9 +152,52 @@ body {
     background: #0056b3;
 }
 
-/* =======================
-   レスポンシブ対応
-======================= */
+/* 終了メッセージ */
+.end-message {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 2rem;
+}
+
+/* フッター入力欄 */
+.chat-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #ccc;
+    z-index: 999;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+}
+
+.chat-send-btn {
+    background-color: #007bff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.send-icon {
+    width: 20px;
+    height: 20px;
+    filter: invert(1);
+}
+
+/* レスポンシブ */
 @media (max-width: 768px) {
     .options-grid a {
         width: calc(50% - 1rem);
@@ -150,34 +208,4 @@ body {
     .options-grid a {
         width: 100%;
     }
-}
-
-/* =======================
-   アニメーション付き質問表示
-======================= */
-.question-box {
-    margin-bottom: 20px;
-    padding: 15px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, opacity 0.5s ease;
-}
-
-.question-box.show {
-    max-height: 1000px;
-    opacity: 1;
-}
-
-/* =======================
-   終了メッセージ
-======================= */
-.end-message {
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding: 2rem;
 }
