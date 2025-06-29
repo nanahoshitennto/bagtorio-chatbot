@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>チャット型質問</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f7f7f7;
+            padding: 2rem;
+        }
+
+        .chat-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            margin-right: 1rem;
+        }
+
+        .chat-header .question-text {
+            background: #dbeafe;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .options-grid a {
+            width: calc(25% - 1rem);
+            min-width: 150px;
+            max-width: 220px;
+            text-align: center;
+            padding: 0.75rem;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .options-grid a:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid a {
+                width: calc(50% - 1rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .options-grid a {
+                width: 100%;
+            }
+        }
+
+        .question-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+        }
+
+        .question-box.show {
+            max-height: 1000px;
+            opacity: 1;
+        }
+
+        .end-message {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-box" id="chat-container">
+
+    <!-- 最初の質問 -->
+    <div class="question-box show" id="q{{ question[0] }}">
+        <div class="chat-header">
+            <img src="{{ url_for('static', filename='chat-icon.png') }}" alt="チャット君">
+            <div class="question-text">{{ question[1] }}</div>
+        </div>
+        <div class="options-grid">
+            {% for option in options %}
+                {% if option[1] and option[1] != 'None' %}
+                    <a onclick="showNextQuestion('q{{ option[1] }}')">{{ option[0] }}</a>
+                {% else %}
+                    <a onclick="showNextQuestion('qend')">{{ option[0] }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 2問目以降 -->
+    {% for q in all_questions %}
+    <div class="question-box" id="q{{ q.id }}">
+        <div class="chat-header">
+            <img src="{{ url_for('static', filename='chat-icon.png') }}" alt="チャット君">
+            <div class="question-text">{{ q.question }}</div>
+        </div>
+        <div class="options-grid">
+            {% for opt in q.options %}
+                {% if opt.next_id and opt.next_id != 'None' %}
+                    <a onclick="showNextQuestion('q{{ opt.next_id }}')">{{ opt.text }}</a>
+                {% else %}
+                    <a onclick="showNextQuestion('qend')">{{ opt.text }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- 終了メッセージ -->
+    <div class="question-box" id="qend">
+        <div class="end-message">ご回答ありがとうございました！</div>
+    </div>
+
+</div>
+
+<script>
+    function showNextQuestion(nextId) {
+        if (!nextId || nextId === 'qNone' || nextId === 'None') {
+            nextId = 'qend';
+        }
+        const nextBox = document.getElementById(nextId);
+        if (nextBox) {
+            nextBox.classList.add('show');
+            nextBox.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+
+</body>
+</html>

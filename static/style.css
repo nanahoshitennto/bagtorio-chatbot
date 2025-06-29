@@ -1,0 +1,138 @@
+body {
+    font-family: sans-serif;
+    background: #f7f7f7;
+    padding: 2rem;
+}
+
+.chat-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 900px;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.chat-header img {
+    width: 40px;
+    height: 40px;
+    margin-right: 1rem;
+}
+
+.chat-header .question-text {
+    background: #dbeafe;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* ✅ 選択肢グリッドレイアウト */
+.options-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.options-grid a {
+    width: calc(25% - 1rem); /* PC：4列 */
+    min-width: 150px;
+    max-width: 220px;
+    text-align: center;
+    padding: 0.75rem;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.options-grid a:hover {
+    background: #0056b3;
+}
+
+/* ✅ タブレット：2列 */
+@media (max-width: 768px) {
+    .options-grid a {
+        width: calc(50% - 1rem);
+    }
+}
+
+/* ✅ スマホ：1列 */
+@media (max-width: 480px) {
+    .options-grid a {
+        width: 100%;
+    }
+}
+
+/* ✅ スライド表示アニメーション用クラス */
+.question-box {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+/* ✅ .show がついたら表示される */
+.question-box.show {
+    max-height: 1000px; /* 高さは多めにとっておくと安心 */
+    opacity: 1;
+}
+
+/* ✅ 終了メッセージ内のテキスト全体 */
+.end-message {
+    background: #f1f1f1;
+    padding: 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* ✅ 「はい」「いいえ」ボタン */
+.feedback-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.fb-button {
+    background-color: #c00;
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.fb-button:hover {
+    background-color: #900;
+}
+
+/* ✅ 「最初からやり直す」リンク */
+.restart {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.restart-link {
+    color: #007bff;
+    text-decoration: underline;
+}
