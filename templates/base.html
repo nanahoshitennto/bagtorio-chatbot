@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>武岡皮膚科クリニック　チャットサポート</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- ✅ ヘッダー（中央タイトル＋右にリセットアイコン） -->
+    <header class="header">
+        <div class="header-title">武岡皮膚科クリニック　チャットサポート</div>
+        <div class="header-reset">
+            <!-- 🔄 リセットボタン -->
+            <a href="{{ url_for('question_start') }}" class="reset-btn" title="最初に戻る">
+                <img src="{{ url_for('static', filename='reset-icon.png') }}" alt="リセット" class="reset-icon">
+            </a>
+        </div>
+    </header>
+
+    <!-- ✅ メインコンテンツ -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

@@ -22,11 +22,10 @@ def get_question(q_id):
     cursor.execute("SELECT label, next_id FROM options WHERE question_id=?", (q_id,))
     options_raw = cursor.fetchall()
     options = []
-    for o in options_raw:
-        next_id = o[1]
+    for label, next_id in options_raw:
         if not next_id or str(next_id).lower() in ['none', 'result', 'end']:
             next_id = 'end'
-        options.append((o[0], next_id))
+        options.append((label, next_id))
 
     # 全質問を取得（スライドUI用）
     cursor.execute("SELECT id, text FROM questions")
@@ -36,14 +35,13 @@ def get_question(q_id):
         cursor.execute("SELECT label, next_id FROM options WHERE question_id=?", (q[0],))
         opts = cursor.fetchall()
         opt_list = []
-        for o in opts:
-            next_id = o[1]
+        for label, next_id in opts:
             if not next_id or str(next_id).lower() in ['none', 'result', 'end']:
                 next_id = 'end'
-            opt_list.append({'text': o[0], 'next_id': next_id})
+            opt_list.append({'text': label, 'next_id': next_id})
         all_questions.append({'id': q[0], 'question': q[1], 'options': opt_list})
 
-    # 表示済みの質問を除外（現在の質問以外を表示）
+    # 表示中の質問を除外
     all_questions = [q for q in all_questions if q['id'] != question[0]]
 
     conn.close()
@@ -65,10 +63,13 @@ def question(q_id):
     question_data, options, all_questions = get_question(q_id)
     if not question_data:
         return redirect(url_for('end'))
-    return render_template('question.html',
-                           question=question_data,
-                           options=options,
-                           all_questions=all_questions)
+
+    return render_template(
+        'question.html',
+        question=question_data,
+        options=options,
+        all_questions=all_questions
+    )
 
 @app.route('/end')
 def end():
