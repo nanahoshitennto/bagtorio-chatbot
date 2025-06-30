@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>たけぴー先生チャット</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">
+      <img src="takepi.png" alt="たけぴー先生" class="avatar" />
+      <h2>たけぴー先生</h2>
+    </div>
+
+    <!-- スタートメニュー -->
+    <div class="chat-box" id="mainMenu">
+      <p>こんにちは！ご希望の内容を教えてください♪</p>
+      <button onclick="showSection('hifuka')">皮膚科（保険診療）</button>
+      <button onclick="showSection('biyouhifuka')">美容皮膚科（自由診療）</button>
+      <button onclick="showSection('biyougeka')">美容外科（自由診療）</button>
+      <button onclick="showSection('skincare')">スキンケア商品の購入</button>
+      <button onclick="showSection('others')">その他</button>
+    </div>
+
+    <!-- 皮膚科 -->
+    <div class="chat-box" id="hifuka" style="display:none;">
+      <p>順番予約は取られていますか？</p>
+      <button onclick="showResult('yoyaku-ari')">はい</button>
+      <button onclick="showResult('yoyaku-nashi')">いいえ</button>
+      <button onclick="goBackAuto()">← 前の画面に戻る</button>
+    </div>
+
+    <!-- 美容皮膚科 -->
+    <div class="chat-box" id="biyouhifuka" style="display:none;">
+      <p>ご希望の施術をお選びください：</p>
+      <button onclick="openLink('https://example.com/datsumou')">脱毛</button>
+      <button onclick="openLink('https://example.com/shimi')">しみ・美白</button>
+      <button onclick="openLink('https://example.com/akaragao')">赤ら顔</button>
+      <button onclick="openLink('https://example.com/nikibi')">にきび・にきび跡</button>
+      <button onclick="openLink('https://example.com/keana')">毛穴・くすみ</button>
+      <button onclick="openLink('https://example.com/karumi')">たるみ</button>
+      <button onclick="openLink('https://example.com/hokuro')">ほくろ・いぼ・そばかす</button>
+      <button onclick="openLink('https://example.com/takansho')">多汗症・ワキガ</button>
+      <button onclick="openLink('https://example.com/pierce')">ピアス（耳たぶ）</button>
+      <button onclick="openLink('https://example.com/chusha')">美容注射・点滴</button>
+      <button onclick="openLink('https://example.com/aga')">AGA/FAGA</button>
+      <button onclick="openLink('https://example.com/ed')">ED</button>
+      <button onclick="openLink('https://example.com/tattoo')">入れ墨除去</button>
+      <button onclick="openLink('https://example.com/sonota')">その他</button>
+      <button onclick="goBackAuto()">← 前の画面に戻る</button>
+    </div>
+
+    <!-- 美容外科 -->
+    <div class="chat-box" id="biyougeka" style="display:none;">
+      <p>ご希望の施術をお選びください：</p>
+      <button onclick="openLink('https://example.com/futae')">二重の整形</button>
+      <button onclick="openLink('https://example.com/megashira')">目頭の整形</button>
+      <button onclick="openLink('https://example.com/eyelift')">目のたるみ整形</button>
+      <button onclick="openLink('https://example.com/kuma')">クマの整形（目の下）</button>
+      <button onclick="openLink('https://example.com/threadlift')">糸リフト</button>
+      <button onclick="openLink('https://example.com/hyaluronic')">ヒアルロン酸</button>
+      <button onclick="openLink('https://example.com/piercing')">ピアス（へそ・耳軟骨など）</button>
+      <button onclick="openLink('https://example.com/tattoo')">タトゥー除去</button>
+      <button onclick="openLink('https://example.com/mimidaresu')">耳垂裂形成</button>
+      <button onclick="openLink('https://example.com/kizu')">傷跡修正</button>
+      <button onclick="openLink('https://example.com/other-biyougeka')">その他</button>
+      <button onclick="goBackAuto()">← 前の画面に戻る</button>
+    </div>
+
+    <!-- スキンケア購入① -->
+    <div class="chat-box" id="skincare" style="display:none;">
+      <p>どのように商品をお探しですか？</p>
+      <button onclick="showSection('brandSelect')">メーカー名から選ぶ</button>
+      <button onclick="showSection('purposeSelect')">お悩み別で選ぶ</button>
+      <button onclick="goBackAuto()">← 前の画面に戻る</button>
+    </div>
+
+    <!-- スキンケア②：ブランド別 -->
+    <div class="chat-box" id="brandSelect" style="display:none;">
+      <p>ご希望のメーカーをお選びください：</p>
+      <button onclick="openLink('https://example.com/plusrestore')">プラスリストア</button>
+      <button onclick="openLink('https://example.com/cellnew')">セルニュープラス</button>
+      <button onclick="openLink('https://example.com/sunsorit')">サンソリット</button>
+      <button onclick="openLink('https://example.com/zoskin')">ZOスキン</button>
+      <button onclick="openLink('https://example.com/pureasy')">ピュレアジー</button>
+      <button onclick="openLink('https://example.com/janmarini')">ジャンマリーニ</button>
+      <button onclick="goBackAuto()">← 前の画面に戻る</button>
+    </div>
+
+    <!-- スキンケア②：お悩み別 -->
+    <div class="chat-box" id="purposeSelect" style="display:none;">
+      <p>お肌のお悩み・ご用途をお選びください：</p>
+      <button onclick="openLink('https://example.com/shimi')">シミ・肝斑</button>
+      <button onclick="openLink('https://example.com/nikibi')">ニキビ・ニキビ跡</button>
+      <button onclick="openLink('https://example.com/shiwa')">しわ・たるみ</button>
+      <button onclick="openLink('https://example.com/keana')">毛穴の開き・黒ずみ</button>
+      <button onclick="openLink('https://example.com/toneup')">肌トーンアップ</button>
+      <button onclick="openLink('https://example.com/prepost')">治療前後のケア</button>
+      <button onclick="openLink('https://example.com/kansou')">乾燥肌・敏感肌</button>
+      <button onclick="openLink('https://example.com/uv')">日焼け止め</button>
+      <button onclick="goBackAuto()">← 前の画面に戻る</button>
+    </div>
+
+    <!-- 自由入力チャット -->
+    <div class="chat-box" id="freeChat">
+      <p>ご質問があれば入力してください📝</p>
+      <input type="text" id="userInput" placeholder="例：しみの治療について知りたい" />
+      <button onclick="handleInput()">送信</button>
+    </div>   
+
+    <!-- 結果表示 -->
+    <div class="chat-box" id="result" style="display:none;">
+      <div class="chat-response">
+        <img src="takepi.png" class="avatar" />
+        <div class="bubble">
+          <p id="resultText"></p>
+        </div>
+      </div>
+      <button onclick="resetChat()">最初に戻る</button>
+      <button onclick="goBackAuto()">← 前の画面に戻る</button>
+    </div>
+  </div> <!-- chat-container -->
+  
+  <!-- ✅ JavaScriptファイルの読み込み -->
+  <script src="script.js"></script>
+</body>
+</html>
