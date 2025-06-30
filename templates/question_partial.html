@@ -1,0 +1,49 @@
+<!-- ✅ チャット形式での質問表示（ヘッダー＋選択肢ボタン） -->
+<div class="chat-message chat-bot">
+  <div class="chat-header">
+    <img src="{{ url_for('static', filename='takeoka-icon.png') }}" alt="ロゴ" class="chat-logo">
+    <p>「{{ question[1] }}」ですね。以下からお選びください。</p>
+  </div>
+</div>
+
+<!-- ✅ 最初の質問 -->
+<div class="question-box show" id="q{{ question[0] }}">
+  <div class="chat-message">
+    <div class="question-text">{{ question[1] }}</div>
+  </div>
+  <div class="options-grid">
+    {% for option in options %}
+      {% if option[1] and option[1] != 'None' %}
+        <a onclick="showNextQuestion('q{{ option[1] }}', '{{ option[0] }}', this)">{{ option[0] }}</a>
+      {% else %}
+        <a onclick="showNextQuestion('qend', '{{ option[0] }}', this)">{{ option[0] }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ✅ 2問目以降 -->
+{% for q in all_questions %}
+<div class="question-box" id="q{{ q.id }}">
+  <div class="chat-message">
+    <div class="question-text">{{ q.question }}</div>
+  </div>
+  <div class="options-grid">
+    {% for opt in q.options %}
+      {% if opt.next_id and opt.next_id != 'None' %}
+        <a onclick="showNextQuestion('q{{ opt.next_id }}', '{{ opt.text }}', this)">{{ opt.text }}</a>
+      {% else %}
+        <a onclick="showNextQuestion('qend', '{{ opt.text }}', this)">{{ opt.text }}</a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endfor %}
+
+<!-- ✅ 終了時のリスタート案内 -->
+{% if question[1] == '終了' %}
+<div class="restart-box">
+  <img src="{{ url_for('static', filename='takeoka-icon.png') }}" alt="リセット">
+  <span>最初からやり直す場合は <a href="{{ url_for('question_start') }}">こちら</a></span>
+</div>
+{% endif %}

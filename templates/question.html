@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="chat-box" id="chat-container">
-
     <!-- チャットヘッダー -->
     <div class="chat-header">
         <img src="{{ url_for('static', filename='takeoka-icon.png') }}" alt="ロゴ" class="chat-logo">
@@ -20,9 +19,9 @@
         <div class="options-grid">
             {% for option in options %}
                 {% if option[1] and option[1] != 'None' %}
-                    <a onclick="showNextQuestion('q{{ option[1] }}', '{{ option[0] }}')">{{ option[0] }}</a>
+                    <a onclick="showNextQuestion('q{{ option[1] }}', '{{ option[0] }}', this)">{{ option[0] }}</a>
                 {% else %}
-                    <a onclick="showNextQuestion('qend', '{{ option[0] }}')">{{ option[0] }}</a>
+                    <a onclick="showNextQuestion('qend', '{{ option[0] }}', this)">{{ option[0] }}</a>
                 {% endif %}
             {% endfor %}
         </div>
@@ -37,9 +36,9 @@
         <div class="options-grid">
             {% for opt in q.options %}
                 {% if opt.next_id and opt.next_id != 'None' %}
-                    <a onclick="showNextQuestion('q{{ opt.next_id }}', '{{ opt.text }}')">{{ opt.text }}</a>
+                    <a onclick="showNextQuestion('q{{ opt.next_id }}', '{{ opt.text }}', this)">{{ opt.text }}</a>
                 {% else %}
-                    <a onclick="showNextQuestion('qend', '{{ opt.text }}')">{{ opt.text }}</a>
+                    <a onclick="showNextQuestion('qend', '{{ opt.text }}', this)">{{ opt.text }}</a>
                 {% endif %}
             {% endfor %}
         </div>
@@ -47,7 +46,7 @@
     {% endfor %}
 </div>
 
-<!-- フッター入力欄 -->
+<!-- 入力欄 -->
 <div class="chat-footer">
     <input type="text" placeholder="質問を入力してください" class="chat-input">
     <button class="chat-send-btn">
@@ -55,63 +54,82 @@
     </button>
 </div>
 
-<!-- JavaScript -->
+<!-- JavaScript ロジック -->
 <script>
-function showNextQuestion(nextId, selectedText) {
+function showNextQuestion(nextId, selectedText, clickedElement) {
     if (!nextId || nextId === 'qNone' || nextId === 'None') {
         nextId = 'qend';
     }
 
     const chatContainer = document.getElementById("chat-container");
 
-    if (nextId !== 'qend') {
-        const nextBox = document.getElementById(nextId);
-        if (!nextBox.classList.contains("show")) {
-            const commentDiv = document.createElement("div");
-            commentDiv.className = "chat-message chat-bot";
-            commentDiv.style.marginTop = "0.5rem";
-            commentDiv.style.marginBottom = "0.5rem";
-            commentDiv.innerHTML = `
-                <div class="chat-header">
-                    <img src="{{ url_for('static', filename='takeoka-icon.png') }}" alt="ロゴ" class="chat-logo">
-                    <p>「${selectedText}」ですね。以下からお選びください。</p>
-                </div>
-            `;
-            nextBox.parentNode.insertBefore(commentDiv, nextBox);
-            nextBox.classList.add("show");
-        }
+    // 🔧 同じ質問内の選択肢を取得して、全部無効化＋選択解除
+    const parentBox = clickedElement.closest(".question-box");
+    const allOptions = parentBox.querySelectorAll("a");
+    allOptions.forEach(btn => {
+        btn.classList.add("disabled");
+        btn.classList.remove("selected");
+        btn.style.pointerEvents = "none";
+    });
+
+    // ✅ 押された選択肢だけ「選択済み」として青表示
+    clickedElement.classList.add("selected");
+
+    // ✅ 次の質問ボックスを表示
+    const nextBox = document.getElementById(nextId);
+    if (nextBox && !nextBox.classList.contains("show")) {
+        const commentDiv = document.createElement("div");
+        commentDiv.className = "chat-message chat-bot fade-in";
+        commentDiv.innerHTML = `
+            <div class="chat-header">
+                <img src="{{ url_for('static', filename='takeoka-icon.png') }}" alt="ロゴ" class="chat-logo">
+                <p>「${selectedText}」ですね。以下からお選びください。</p>
+            </div>
+        `;
+        chatContainer.appendChild(commentDiv);
+
+        nextBox.classList.add("show");
+        chatContainer.appendChild(nextBox);
         nextBox.scrollIntoView({ behavior: 'smooth' });
-    } else {
-        // 「最初に戻る」コメントを追加
-        const restartDiv = document.createElement("div");
-        restartDiv.className = "chat-message chat-bot";
-        restartDiv.style.marginTop = "0.5rem";
-        restartDiv.style.marginBottom = "0.5rem";
-        restartDiv.innerHTML = `
+    }
+
+    // ✅ 最後の質問だった場合
+    if (nextId === 'qend') {
+        const endDiv = document.createElement("div");
+        endDiv.className = "chat-message chat-bot fade-in";
+        endDiv.innerHTML = `
             <div class="chat-header">
                 <img src="{{ url_for('static', filename='takeoka-icon.png') }}" alt="ロゴ" class="chat-logo">
                 <p>最初からやり直す場合は <a href="#" onclick="restartChat()" style="text-decoration: underline; color: #007BFF;">こちら</a></p>
             </div>
         `;
-        chatContainer.appendChild(restartDiv);
-        restartDiv.scrollIntoView({ behavior: 'smooth' });
+        chatContainer.appendChild(endDiv);
+        endDiv.scrollIntoView({ behavior: 'smooth' });
     }
 }
 
+// ✅ やり直し処理
 function restartChat() {
     const chatContainer = document.getElementById("chat-container");
 
+    // 全コメントと質問ボックスを初期化
     const boxes = chatContainer.querySelectorAll(".question-box, .chat-message.chat-bot");
     boxes.forEach(box => {
         box.classList.remove("show");
-        if (box.classList.contains("chat-message")) {
-            box.remove();  // コメントは削除
-        }
+        if (box.classList.contains("chat-message")) box.remove();
     });
 
+    // 最初の質問のみ表示
     const first = document.querySelector(".question-box");
     if (first) {
         first.classList.add("show");
+
+        const buttons = first.querySelectorAll("a");
+        buttons.forEach(btn => {
+            btn.classList.remove("disabled", "selected");
+            btn.style.pointerEvents = "";
+        });
+
         first.scrollIntoView({ behavior: 'smooth' });
     }
 }
